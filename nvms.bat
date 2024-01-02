@@ -90,6 +90,9 @@ ECHO Environment variable NVMS_HOME is set as %currentDir%.
 reg add "HKCU\Software\Microsoft\Command Processor" /v AutoRun /t REG_EXPAND_SZ /d "nvms auto" /f
 ECHO AutoRun command added to HKCU\Software\Microsoft\Command Processor.
 
+REM Add temp folder
+mkdir temp
+
 REM Get env path
 SET "envPath="
 FOR /f "tokens=2*" %%a IN ('REG QUERY "HKCU\Environment" /v "Path"') DO SET "envPath=%%~b"
