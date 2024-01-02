@@ -76,7 +76,7 @@ ECHO   nvms setup                    : Set up environment and registry required 
 ECHO   nvms install ^<version^>        : Install a specific version of node.js.
 ECHO   nvms list                     : List the node.js installations.
 ECHO   nvms use [version]            : Switch to use the specified version.
-ECHO   nvms on                       : Switch to use the specified version.
+ECHO   nvms on                       : Switch to use the current version.
 ECHO   nvms uninstall ^<version^>      : Uninstall a specific version of node.js.
 ECHO   nvms clean                    : Clean the temp folder used for installation.
 GOTO end
@@ -87,7 +87,7 @@ SET "currentDir=%cd%"
 SETX NVMS_HOME "%currentDir%"
 ECHO Environment variable NVMS_HOME is set as %currentDir%.
 
-reg add "HKCU\Software\Microsoft\Command Processor" /v AutoRun /t REG_EXPAND_SZ /d "nvms auto" /f
+reg add "HKCU\Software\Microsoft\Command Processor" /v AutoRun /t REG_EXPAND_SZ /d "RefreshEnv && nvms auto" /f
 ECHO AutoRun command added to HKCU\Software\Microsoft\Command Processor.
 
 REM Add temp folder
