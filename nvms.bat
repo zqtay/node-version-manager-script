@@ -4,18 +4,11 @@ SETLOCAL EnableDelayedExpansion
 
 SET VERSION=1.0
 SET NVMS_HOME=%NVMS_HOME%
-SET NVMS_NODE_HOME=%NVMS_NODE_HOME%
+SET "NVMS_NODE_HOME=%NVMS_NODE_HOME%"
 
 REM Get command parameters
 SET "command=%1"
 SET "param1=%2"
-
-IF "!command!" == "auto" (
-    ENDLOCAL & (
-        SET "PATH=%NVMS_NODE_HOME%;%PATH%"
-    )
-    GOTO end
-)
 
 SET "isSetupCommand="
 IF "!command!" == "install" SET "isSetupCommand=1"
@@ -55,7 +48,7 @@ IF "!command!" == "" (
     IF "!command!" == "on" (
         GOTO on
     ) ELSE IF "!command!" == "current" (
-        ECHO %NVMS_NODE_HOME%
+        ECHO !NVMS_NODE_HOME!
         GOTO end
     )
 )
@@ -87,7 +80,7 @@ SET "currentDir=%cd%"
 SETX NVMS_HOME "%currentDir%"
 ECHO Environment variable NVMS_HOME is set as %currentDir%.
 
-reg add "HKCU\Software\Microsoft\Command Processor" /v AutoRun /t REG_EXPAND_SZ /d "RefreshEnv && nvms auto" /f
+reg add "HKCU\Software\Microsoft\Command Processor" /v AutoRun /t REG_EXPAND_SZ /d "RefreshEnv && nvms on" /f
 ECHO AutoRun command added to HKCU\Software\Microsoft\Command Processor.
 
 REM Add temp folder
@@ -173,21 +166,24 @@ CALL :prependNodePath
 
 REM Save current path
 SETX NVMS_NODE_HOME "!nodepath!"
+SET "NVMS_NODE_HOME=!nodepath!"
 
 ECHO Current node.js version is set to !param1!.
 ENDLOCAL & (
     REM Update env path
     SET "PATH=%newpath%"
+	SET "NVMS_NODE_HOME=%NVMS_NODE_HOME%"
     REM powershell -command '$env:path=\"%newpath%\"'
 )
 GOTO end
 
 :on
 SET "newpath=%PATH%"
-SET "nodepath=%NVMS_NODE_HOME%"
+SET "nodepath=!NVMS_NODE_HOME!"
 CALL :prependNodePath
 ENDLOCAL & (
     SET "PATH=%newpath%"
+	SET "NVMS_NODE_HOME=%NVMS_NODE_HOME%"
     REM powershell -command '$env:path=\"%newpath%\"'
 )
 GOTO end
